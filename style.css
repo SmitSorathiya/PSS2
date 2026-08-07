@@ -1,0 +1,146 @@
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f1117;--card:#1a1d27;--inp:#252836;--bdr:#2e3348;--acc:#6c63ff;--accl:#8b83ff;--glow:rgba(108,99,255,.25);--txt:#e8e8f0;--muted:#8b8da3;--dim:#5a5c72;--ok:#2dd4a8;--r:12px;--rs:8px}
+html{font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;overflow-x:hidden}
+
+/* ===== LOGIN OVERLAY ===== */
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,20,.95);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
+.login-overlay.hidden{opacity:0;pointer-events:none}
+.login-card{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:40px 36px;width:360px;text-align:center;box-shadow:0 16px 64px rgba(0,0,0,.5)}
+.login-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--acc),#9b59b6);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;margin:0 auto 20px;box-shadow:0 6px 24px var(--glow)}
+.login-title{font-size:1.3rem;font-weight:700;margin-bottom:6px}
+.login-subtitle{font-size:.82rem;color:var(--muted);margin-bottom:24px}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.login-input{background:var(--inp);border:1.5px solid var(--bdr);border-radius:var(--rs);padding:13px 16px;font-size:.95rem;color:var(--txt);font-family:inherit;outline:none;text-align:center;letter-spacing:.1em;transition:border-color .2s,box-shadow .2s}
+.login-input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--glow)}
+.login-input::placeholder{color:var(--dim);letter-spacing:.04em}
+.login-error{font-size:.78rem;color:#ff5c5c;opacity:0;transition:opacity .2s;margin-top:-4px}
+.login-error.show{opacity:1}
+.login-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:none;border-radius:var(--rs);background:linear-gradient(135deg,var(--acc),#9b59b6);color:#fff;font-size:.9rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px var(--glow)}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px var(--glow)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.login-card.shake{animation:shake .4s ease}
+
+.app-container{width:420px;min-width:420px;min-height:100vh;background:var(--card);border-right:1px solid var(--bdr);padding:32px 28px;display:flex;flex-direction:column;overflow-y:auto}
+.app-header{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--acc),#9b59b6);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 16px var(--glow)}
+.app-header h1{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 30%,var(--accl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{font-size:.8rem;color:var(--muted);margin-top:2px}
+
+.form-section{display:flex;flex-direction:column;gap:20px;flex:1}
+.form-group{display:flex;flex-direction:column;gap:8px;flex:1}
+.form-label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.form-label-small{font-size:.72rem;font-weight:500;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.form-input{background:var(--inp);border:1.5px solid var(--bdr);border-radius:var(--rs);padding:11px 14px;font-size:.9rem;color:var(--txt);font-family:inherit;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+.form-input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--glow)}
+.form-input::placeholder{color:var(--dim)}
+.form-row{display:flex;gap:14px}
+
+.name-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 18px;border-radius:99px;border:1.5px solid var(--bdr);background:var(--inp);color:var(--muted);font-size:.82rem;font-weight:500;font-family:inherit;cursor:pointer;transition:all .2s}
+.chip:hover{border-color:var(--acc);color:var(--txt);background:rgba(108,99,255,.08)}
+.chip.active{background:linear-gradient(135deg,var(--acc),#9b59b6);color:#fff;border-color:transparent;box-shadow:0 2px 12px var(--glow)}
+
+.action-buttons{display:flex;gap:12px;margin-top:8px}
+.btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border:none;border-radius:var(--rs);font-size:.88rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.btn-preview{background:var(--inp);color:var(--txt);border:1.5px solid var(--bdr)}
+.btn-preview:hover{border-color:var(--acc);box-shadow:0 2px 12px var(--glow);transform:translateY(-1px)}
+.btn-print{background:linear-gradient(135deg,var(--acc),#9b59b6);color:#fff;box-shadow:0 4px 16px var(--glow)}
+.btn-print:hover{transform:translateY(-1px);box-shadow:0 6px 24px var(--glow)}
+.btn-download{background:linear-gradient(135deg,#2dd4a8,#1aab85);color:#fff;box-shadow:0 4px 16px rgba(45,212,168,.3)}
+.btn-download:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(45,212,168,.4)}
+
+.preview-panel{flex:1;padding:28px 32px;display:flex;flex-direction:column;min-height:100vh}
+.preview-header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.preview-header h2{font-size:1.1rem;font-weight:700}
+.preview-badge{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:4px 12px;border-radius:99px;background:rgba(45,212,168,.2);color:var(--ok);border:1px solid rgba(45,212,168,.3)}
+.preview-scroll{flex:1;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto}
+
+/* ===== BILL ===== */
+.bill-page{width:210mm;min-height:297mm;background:#fff;color:#000;padding:15mm 18mm 12mm;font-family:'Inter',Arial,sans-serif;font-size:11pt;box-shadow:0 8px 40px rgba(0,0,0,.4);border-radius:4px;flex-shrink:0}
+.bill-name{text-align:center;font-family:'Playfair Display',Georgia,serif;font-size:22pt;font-weight:800;letter-spacing:.04em;color:#1a1a3e;margin-bottom:24px;text-transform:uppercase}
+.bill-info-table{width:100%;border-collapse:collapse}
+.bill-info-table td{border:1.5px solid #333;padding:8px 10px;vertical-align:top;font-size:10.5pt}
+.ms-cell{width:55%;height:auto;min-height:40px}
+.date-cell{width:45%}
+.label-bold{font-weight:700;font-size:11pt}
+.date-inner-table{width:100%;border-collapse:collapse}
+.date-inner-table td{padding:8px 10px;font-size:10.5pt;vertical-align:middle;border:none}
+.date-inner-table tr+tr td{border-top:1.5px solid #333}
+.date-label-cell{border-right:1.5px solid #333 !important;white-space:nowrap;font-weight:700;width:1%;padding-right:6px}
+.date-val-cell{padding-left:12px;font-size:11pt;font-weight:600}
+.bill-subject{background:#fff;border:1.5px solid #333;border-top:none;padding:6px 10px;font-weight:700;font-size:10.5pt}
+.bill-table{width:100%;border-collapse:collapse}
+.bill-table th,.bill-table td{border:1.5px solid #333;padding:7px 10px;text-align:center;font-size:10.5pt}
+.bill-table thead{background:#fff}
+.bill-table th{font-weight:700;text-transform:uppercase}
+.col-sr{width:10%}.col-particular{width:35%}.col-qty{width:12%}.col-rate{width:18%}.col-amount{width:25%}
+.text-left{text-align:left!important}.text-right{text-align:right!important}
+.empty-row td{height:32px}
+.total-row td{font-weight:700;font-size:11pt;border-top:2px solid #333}
+.bill-words{width:100%;border-collapse:collapse}
+.bill-words td{border:1.5px solid #333;padding:10px;font-size:10pt}
+.words-label{font-weight:700}
+.bill-signature{width:100%;border-collapse:collapse}
+.bill-signature td{border:1.5px solid #333;padding:14px 10px;font-size:10.5pt;vertical-align:bottom;height:70px}
+.sign-text{text-align:right;font-weight:700;font-style:italic}
+.bill-remarks{margin-top:8px;font-weight:700;font-size:10.5pt}
+
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{display:block;position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999}
+  #printArea .bill-page{box-shadow:none;border-radius:0;margin:0;padding:10mm 15mm;width:100%;min-height:auto}
+  @page{size:A4;margin:0}
+}
+@media(max-width:960px){
+  body{flex-direction:column}
+  .app-container{width:100%;min-width:unset;min-height:unset;border-right:none;border-bottom:1px solid var(--bdr);padding:28px 24px}
+  .preview-panel{min-height:unset;padding:24px 20px}
+  .preview-scroll{overflow-x:auto;justify-content:flex-start}
+  .bill-page{transform:scale(.6);transform-origin:top left;margin-bottom:-400px}
+}
+@media(max-width:680px){
+  .app-container{padding:20px 16px}
+  .app-header{margin-bottom:24px}
+  .app-header h1{font-size:1.25rem}
+  .form-section{gap:16px}
+  .form-row{flex-direction:column;gap:14px}
+  .name-chips{gap:6px}
+  .chip{padding:8px 14px;font-size:.78rem}
+  .action-buttons{flex-direction:column;gap:10px}
+  .btn{padding:14px 16px;font-size:.85rem}
+  .preview-panel{padding:20px 12px}
+  .preview-header{margin-bottom:16px}
+  .preview-scroll{justify-content:center}
+  .bill-page{transform-origin:top center;width:100%;min-height:unset;padding:8mm 6mm 8mm;font-size:9pt;min-width:unset;transform:none;margin-bottom:0}
+  .bill-name{font-size:16pt;margin-bottom:14px}
+  .bill-info-table td{padding:6px 8px;font-size:9pt}
+  .label-bold{font-size:9.5pt}
+  .date-inner-table td{padding:6px 8px;font-size:9pt}
+  .date-label-cell{font-size:8.5pt}
+  .date-val-cell{font-size:9.5pt;padding-left:8px}
+  .bill-subject{font-size:9pt;padding:5px 8px}
+  .bill-table th,.bill-table td{padding:5px 6px;font-size:9pt}
+  .empty-row td{height:24px}
+  .bill-words td{padding:8px;font-size:8.5pt}
+  .bill-signature td{height:50px;padding:10px 8px;font-size:9pt}
+  .bill-remarks{font-size:9pt}
+  .login-card{width:calc(100% - 32px);max-width:360px;padding:32px 24px}
+}
+@media(max-width:380px){
+  .app-container{padding:16px 12px}
+  .app-header h1{font-size:1.1rem}
+  .logo-icon{width:40px;height:40px}
+  .logo-icon svg{width:24px;height:24px}
+  .form-input{padding:10px 12px;font-size:.85rem}
+  .chip{padding:7px 12px;font-size:.75rem}
+  .bill-page{padding:6mm 4mm 6mm}
+  .bill-name{font-size:14pt;margin-bottom:10px}
+  .bill-info-table td{padding:5px 6px;font-size:8.5pt}
+  .date-inner-table td{padding:5px 6px;font-size:8.5pt}
+  .bill-table th,.bill-table td{padding:4px 4px;font-size:8pt}
+  .col-particular{width:30%}
+  .login-card{padding:28px 18px}
+}
