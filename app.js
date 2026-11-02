@@ -240,8 +240,15 @@ function updatePreview() {
 
 // ===== Print =====
 function printBill() {
+  const origTitle = document.title;
+  document.title = ' ';
   document.getElementById('billPrint').innerHTML = generateBillHTML();
-  setTimeout(() => window.print(), 200);
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = origTitle;
+    }, 1000);
+  }, 200);
 }
 
 // ===== Download as PDF =====
@@ -262,9 +269,9 @@ function downloadBill() {
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
       <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        @page { size: A4 portrait; margin: 12mm 15mm; }
-        body { background:#fff; margin:0; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-        .bill-page { width:100%; max-width:100%; background:#fff; color:#000; padding:0; font-family:'Inter',Arial,sans-serif; font-size:11pt; margin:0 auto; }
+        @page { size: A4 portrait; margin: 0; }
+        html, body { background:#fff; margin:0; padding:0; width:100%; height:100%; overflow:hidden; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+        .bill-page { width:210mm; max-width:210mm; min-height:297mm; box-sizing:border-box; background:#fff; color:#000; padding:12mm 15mm 10mm; font-family:'Inter',Arial,sans-serif; font-size:11pt; margin:0 auto; }
         .bill-name{text-align:center;font-family:'Playfair Display',Georgia,serif;font-size:24pt;font-weight:800;letter-spacing:.04em;color:#1a1a3e;margin-bottom:22px;text-transform:uppercase}
         .bill-info-table{width:100%;border-collapse:collapse}
         .bill-info-table td{border:1.5px solid #000;padding:10px 12px;vertical-align:top;font-size:11pt}
