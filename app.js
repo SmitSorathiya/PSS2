@@ -84,9 +84,23 @@ document.querySelectorAll('.chip').forEach(chip => {
 });
 
 // ===== Live preview on input =====
-['companyName','billDate','billMonth','guardQty','guardRate','remarks'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updatePreview);
+['companyName','billDate','billMonth','guardQty','guardRate','bouncerQty','bouncerRate','remarks'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updatePreview);
 });
+
+const signCheckbox = document.getElementById('includeSign');
+if (signCheckbox) {
+  signCheckbox.addEventListener('change', updatePreview);
+}
+
+function toggleSignature() {
+  const cb = document.getElementById('includeSign');
+  if (cb) {
+    cb.checked = !cb.checked;
+    updatePreview();
+  }
+}
 
 // ===== Format date as DD/MM/YYYY =====
 function formatDate(dateStr) {
@@ -120,16 +134,21 @@ function generateBillHTML() {
   const company = document.getElementById('companyName').value.trim();
   const dateVal = document.getElementById('billDate').value;
   const month = document.getElementById('billMonth').value;
-  const qty = parseInt(document.getElementById('guardQty').value) || 0;
-  const rate = parseInt(document.getElementById('guardRate').value) || 0;
+  const guardQty = parseInt(document.getElementById('guardQty').value) || 0;
+  const guardRate = parseInt(document.getElementById('guardRate').value) || 0;
+  const bouncerQty = parseInt(document.getElementById('bouncerQty')?.value) || 0;
+  const bouncerRate = parseInt(document.getElementById('bouncerRate')?.value) || 0;
   const remarks = document.getElementById('remarks').value.trim();
-  const amount = qty * rate;
-  const total = amount;
+  const guardAmount = guardQty * guardRate;
+  const bouncerAmount = bouncerQty * bouncerRate;
+  const total = guardAmount + bouncerAmount;
   const dateFormatted = formatDate(dateVal);
 
-  // Build 5 empty rows after the data row
+  const includeSign = document.getElementById('includeSign')?.checked || false;
+
+  // Build 4 empty rows after the 2 data rows
   let emptyRows = '';
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     emptyRows += '<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td></tr>';
   }
 
@@ -172,9 +191,16 @@ function generateBillHTML() {
         <tr>
           <td>1</td>
           <td class="text-left">Security Guard</td>
-          <td>${qty || ''}</td>
-          <td>${rate ? formatAmount(rate) : ''}</td>
-          <td>${amount ? formatAmount(amount) : ''}</td>
+          <td>${guardQty || ''}</td>
+          <td>${guardRate ? formatAmount(guardRate) : ''}</td>
+          <td>${guardAmount ? formatAmount(guardAmount) : ''}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td class="text-left">Bouncer</td>
+          <td>${bouncerQty || ''}</td>
+          <td>${bouncerRate ? formatAmount(bouncerRate) : ''}</td>
+          <td>${bouncerAmount ? formatAmount(bouncerAmount) : ''}</td>
         </tr>
         ${emptyRows}
         <tr class="total-row">
@@ -194,7 +220,12 @@ function generateBillHTML() {
 
     <table class="bill-signature">
       <tr>
-        <td class="sign-text">Authorised Sign</td>
+        <td class="sign-td" onclick="toggleSignature()" title="Click to toggle signature">
+          <div class="sign-container">
+            ${includeSign ? `<img src="new1.png" alt="Authorised Signature" class="sign-img">` : ''}
+            <div class="sign-text">Authorised Sign</div>
+          </div>
+        </td>
       </tr>
     </table>
 
@@ -231,37 +262,38 @@ function downloadBill() {
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
       <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#fff; }
-        .bill-page { width:210mm; min-height:297mm; background:#fff; color:#000; padding:15mm 18mm 12mm; font-family:'Inter',Arial,sans-serif; font-size:11pt; margin:0 auto; }
-        .bill-name{text-align:center;font-family:'Playfair Display',Georgia,serif;font-size:22pt;font-weight:800;letter-spacing:.04em;color:#1a1a3e;margin-bottom:24px;text-transform:uppercase}
+        @page { size: A4 portrait; margin: 12mm 15mm; }
+        body { background:#fff; margin:0; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+        .bill-page { width:100%; max-width:100%; background:#fff; color:#000; padding:0; font-family:'Inter',Arial,sans-serif; font-size:11pt; margin:0 auto; }
+        .bill-name{text-align:center;font-family:'Playfair Display',Georgia,serif;font-size:24pt;font-weight:800;letter-spacing:.04em;color:#1a1a3e;margin-bottom:22px;text-transform:uppercase}
         .bill-info-table{width:100%;border-collapse:collapse}
-        .bill-info-table td{border:1.5px solid #333;padding:8px 10px;vertical-align:top;font-size:10.5pt}
-        .ms-cell{width:55%;height:auto;min-height:40px}
+        .bill-info-table td{border:1.5px solid #000;padding:10px 12px;vertical-align:top;font-size:11pt}
+        .ms-cell{width:55%;min-height:44px}
         .date-cell{width:45%}
-        .label-bold{font-weight:700;font-size:11pt}
+        .label-bold{font-weight:700;font-size:11.5pt}
         .date-inner-table{width:100%;border-collapse:collapse}
-        .date-inner-table td{padding:8px 10px;font-size:10.5pt;vertical-align:middle;border:none}
-        .date-inner-table tr+tr td{border-top:1.5px solid #333}
-        .date-label-cell{border-right:1.5px solid #333 !important;white-space:nowrap;font-weight:700;width:1%;padding-right:6px}
-        .date-val-cell{padding-left:12px;font-size:11pt;font-weight:600}
-        .bill-subject{background:#fff;border:1.5px solid #333;border-top:none;padding:6px 10px;font-weight:700;font-size:10.5pt}
+        .date-inner-table td{padding:9px 12px;font-size:11pt;vertical-align:middle;border:none}
+        .date-inner-table tr+tr td{border-top:1.5px solid #000}
+        .date-label-cell{border-right:1.5px solid #000 !important;white-space:nowrap;font-weight:700;width:1%;padding-right:8px}
+        .date-val-cell{padding-left:14px;font-size:11.5pt;font-weight:600}
+        .bill-subject{background:#fff;border:1.5px solid #000;border-top:none;padding:8px 12px;font-weight:700;font-size:11.5pt}
         .bill-table{width:100%;border-collapse:collapse}
-        .bill-table th,.bill-table td{border:1.5px solid #333;padding:7px 10px;text-align:center;font-size:10.5pt}
+        .bill-table th,.bill-table td{border:1.5px solid #000;padding:9px 10px;text-align:center;font-size:11pt}
         .bill-table thead{background:#fff}
         .bill-table th{font-weight:700;text-transform:uppercase}
         .col-sr{width:10%}.col-particular{width:35%}.col-qty{width:12%}.col-rate{width:18%}.col-amount{width:25%}
         .text-left{text-align:left!important}.text-right{text-align:right!important}
-        .empty-row td{height:32px}
-        .total-row td{font-weight:700;font-size:11pt;border-top:2px solid #333}
+        .empty-row td{height:44px}
+        .total-row td{font-weight:700;font-size:11.5pt;border-top:2px solid #000;padding:10px 10px}
         .bill-words{width:100%;border-collapse:collapse}
-        .bill-words td{border:1.5px solid #333;padding:10px;font-size:10pt}
-        .words-label{font-weight:700}
+        .bill-words td{border:1.5px solid #000;padding:12px 14px;font-size:11pt}
+        .words-label{font-weight:700;font-size:11pt}
         .bill-signature{width:100%;border-collapse:collapse}
-        .bill-signature td{border:1.5px solid #333;padding:14px 10px;font-size:10.5pt;vertical-align:bottom;height:70px}
+        .bill-signature td{border:1.5px solid #000;padding:10px 16px 14px;font-size:11pt;vertical-align:bottom;height:85px}
+        .sign-container{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;width:100%;height:100%}
+        .sign-img{max-height:60px;max-width:150px;object-fit:contain;margin-bottom:-10px;margin-right:8px;mix-blend-mode:multiply;display:block}
         .sign-text{text-align:right;font-weight:700;font-style:italic}
-        .bill-remarks{margin-top:8px;font-weight:700;font-size:10.5pt}
-        @page { size:A4; margin:0; }
-        @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+        .bill-remarks{margin-top:10px;font-weight:700;font-size:11pt}
       </style>
     </head>
     <body>
